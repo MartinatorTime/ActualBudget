@@ -1,26 +1,24 @@
 FROM actualbudget/actual-server:latest
 
-ARG INSTALL_SUPERCRONIC=true
+ARG INSTALL_CLOUDFLARED=true
 ARG INSTALL_CADDY=false
 ARG SYNC_DATA_CLOUDFLARE_R2=false
-ARG KEEP_ALIVE=false
-ARG INSTALL_CLOUDFLARED=true
 ARG BACKUP_RCLONE_R2=false
+ARG KEEP_ALIVE=false
 
 ENV PORT=8080 \
     LOG_FILE=/data/actual.log \
     R2_DATA_SYNC_LOG=false \
     SYNC_DATA_CLOUDFLARE_R2=${SYNC_DATA_CLOUDFLARE_R2} \
     FLY_SWAP=false \
-    OVERMIND_DAEMONIZE=0 \
+    OVERMIND_DAEMONIZE=1 \
     OVERMIND_AUTO_RESTART=all \
     CFUSEREMAIL=${CFUSEREMAIL} \
     CFAPITOKEN=${CFAPITOKEN} \
     CFZONEID=${CFZONEID} \
-    KEEP_ALIVE=${KEEP_ALIVE}
-    #TINI_SUBREAPER=true
+    KEEP_ALIVE=${KEEP_ALIVE} \
+    TINI_SUBREAPER=true
 
-#VOLUME /data
 USER root
 # Install runtime dependencies
 RUN apt-get update && \
@@ -40,13 +38,10 @@ RUN set -ex; \
     curl -L -o overmind.gz "https://github.com/DarthSim/overmind/releases/download/$OVERMIND_VERSION/overmind-${OVERMIND_VERSION}-linux-amd64.gz" || exit 1; \
     gunzip overmind.gz && chmod +x overmind && mv overmind /usr/local/bin/; \
     \
-    if [ "$INSTALL_SUPERCRONIC" = "true" ]; then \
+    if [ "$BACKUP_RCLONE_R2" = "true" ]; then \
         curl -L -o /usr/local/bin/supercronic "https://github.com/aptible/supercronic/releases/download/${SUPERCRONIC_VERSION}/supercronic-linux-amd64" || exit 1; \
         chmod +x /usr/local/bin/supercronic; \
         echo "backup: supercronic ./crontab" >> ./Procfile; \
-    fi; \
-    \
-    if [ "$BACKUP_RCLONE_R2" = "true" ]; then \
         echo "5 0 * * * ./backup-r2-rclone.sh" >> ./crontab; \
     fi; \
     \
@@ -76,8 +71,6 @@ COPY Caddyfile /etc/caddy/Caddyfile
 
 # Chmod the scripts
 RUN chmod +x ./*.sh
-
-EXPOSE 8080
 
 # Set the entrypoint script as the entrypoint for the container
 ENTRYPOINT ["./entrypoint.sh"]
