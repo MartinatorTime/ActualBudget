@@ -9,7 +9,7 @@
 
 # {$DOMAIN}
 
-localhost:80 {
+0.0.0.0:80 {
 	log {
 		level INFO
 		output file {$LOG_FILE} {
@@ -57,7 +57,7 @@ localhost:80 {
 	# Proxy everything to Rocket
 	# if located at a sub-path the reverse_proxy line will look like:
 	#   reverse_proxy /subpath/* <SERVER>:80
-	reverse_proxy localhost:8080 {
+	reverse_proxy 0.0.0.0:8080 {
 		# Send the true remote IP to Rocket, so that Vaultwarden can put this in the
 		# log, so that fail2ban can ban the correct IP.
 		header_up X-Real-IP {http.request.header.Cf-Connecting-Ip}
