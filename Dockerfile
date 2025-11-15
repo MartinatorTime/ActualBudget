@@ -16,8 +16,7 @@ ENV PORT=8080 \
     CFUSEREMAIL=${CFUSEREMAIL} \
     CFAPITOKEN=${CFAPITOKEN} \
     CFZONEID=${CFZONEID} \
-    KEEP_ALIVE=${KEEP_ALIVE} \
-    TINI_SUBREAPER=true
+    KEEP_ALIVE=${KEEP_ALIVE}
 
 USER root
 # Install runtime dependencies
@@ -54,7 +53,7 @@ RUN set -ex; \
     if [ "$INSTALL_CADDY" = "true" ]; then \
         wget -O caddy.tar.gz "https://github.com/caddyserver/caddy/releases/download/$CADDY_VERSION/caddy_${CADDY_VERSION#v}_linux_amd64.tar.gz" || exit 1; \
         tar -xzf caddy.tar.gz -C /usr/local/bin/ caddy; \
-        echo "caddy: caddy run --config /etc/caddy/Caddyfile --adapter caddyfile" >> /Procfile; \
+        echo "caddy: caddy run --config /etc/caddy/Caddyfile --adapter caddyfile" >> ./Procfile; \
     fi; \
     \
     if [ "$SYNC_DATA_CLOUDFLARE_R2" = "true" ]; then \
