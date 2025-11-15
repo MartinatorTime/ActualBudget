@@ -12,13 +12,13 @@ ENV PORT=8080 \
     R2_DATA_SYNC_LOG=false \
     SYNC_DATA_CLOUDFLARE_R2=${SYNC_DATA_CLOUDFLARE_R2} \
     FLY_SWAP=false \
-    OVERMIND_DAEMONIZE=1 \
+    OVERMIND_DAEMONIZE=0 \
     OVERMIND_AUTO_RESTART=all \
     CFUSEREMAIL=${CFUSEREMAIL} \
     CFAPITOKEN=${CFAPITOKEN} \
     CFZONEID=${CFZONEID} \
-    KEEP_ALIVE=${KEEP_ALIVE} \
-    TINI_SUBREAPER=true
+    KEEP_ALIVE=${KEEP_ALIVE}
+    #TINI_SUBREAPER=true
 
 VOLUME /data
 USER root
@@ -43,7 +43,7 @@ RUN set -ex; \
     if [ "$INSTALL_SUPERCRONIC" = "true" ]; then \
         curl -L -o /usr/local/bin/supercronic "https://github.com/aptible/supercronic/releases/download/${SUPERCRONIC_VERSION}/supercronic-linux-amd64" || exit 1; \
         chmod +x /usr/local/bin/supercronic; \
-        echo "backup: supercronic /crontab" >> /Procfile; \
+        echo "backup: supercronic /crontab" >> ./Procfile; \
     fi; \
     \
     if [ "$BACKUP_RCLONE_R2" = "true" ]; then \
@@ -53,7 +53,7 @@ RUN set -ex; \
     if [ "$INSTALL_CLOUDFLARED" = "true" ]; then \
         curl -L -o cloudflared.deb "https://github.com/cloudflare/cloudflared/releases/download/$CLOUDFLARED_VERSION/cloudflared-linux-amd64.deb" || exit 1; \
         dpkg -i cloudflared.deb; \
-        echo "cf_tunnel: /start_cloudflared.sh" >> /Procfile; \
+        echo "cf_tunnel: /start_cloudflared.sh" >> ./Procfile; \
     fi; \
     \
     if [ "$INSTALL_CADDY" = "true" ]; then \
@@ -63,15 +63,15 @@ RUN set -ex; \
     fi; \
     \
     if [ "$SYNC_DATA_CLOUDFLARE_R2" = "true" ]; then \
-        echo "data-sync: /sync-r2-rclone.sh" >> /Procfile; \
+        echo "data-sync: /sync-r2-rclone.sh" >> ./Procfile; \
     fi; \
     \
     if [ "$KEEP_ALIVE" = "true" ]; then \
-    echo "keep-alive: /keep-alive.sh" >> /Procfile; \
+    echo "keep-alive: /keep-alive.sh" >> ./Procfile; \
     fi
 
 # Copy the entrypoint script and other scripts
-COPY scripts/*.sh /
+COPY scripts/*.sh ./
 COPY Caddyfile /etc/caddy/Caddyfile
 
 # Chmod the scripts
