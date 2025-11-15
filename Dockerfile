@@ -53,7 +53,7 @@ RUN set -ex; \
     if [ "$INSTALL_CADDY" = "true" ]; then \
         wget -O caddy.tar.gz "https://github.com/caddyserver/caddy/releases/download/$CADDY_VERSION/caddy_${CADDY_VERSION#v}_linux_amd64.tar.gz" || exit 1; \
         tar -xzf caddy.tar.gz -C /usr/local/bin/ caddy; \
-        echo "caddy: caddy run --config /etc/caddy/Caddyfile --adapter caddyfile" >> ./Procfile; \
+        echo "caddy: caddy run --config ./Caddyfile --adapter caddyfile" >> ./Procfile; \
     fi; \
     \
     if [ "$SYNC_DATA_CLOUDFLARE_R2" = "true" ]; then \
@@ -66,7 +66,7 @@ RUN set -ex; \
 
 # Copy the entrypoint script and other scripts
 COPY scripts/*.sh ./
-COPY Caddyfile /etc/caddy/Caddyfile
+COPY Caddyfile ./Caddyfile
 
 # Chmod the scripts
 RUN chmod +x ./*.sh
