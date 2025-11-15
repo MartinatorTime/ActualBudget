@@ -9,7 +9,6 @@ ARG BACKUP_RCLONE_R2=false
 
 ENV PORT=8080 \
     LOG_FILE=/data/actual.log \
-    DOMAIN=https://budget.martinatortime.us.to \
     R2_DATA_SYNC_LOG=false \
     SYNC_DATA_CLOUDFLARE_R2=${SYNC_DATA_CLOUDFLARE_R2} \
     FLY_SWAP=false \
@@ -29,7 +28,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Create Procfile for overmind
-RUN echo "actualbudget: node app.js" > /Procfile
+RUN echo "actualbudget: node app.js" > ./Procfile
 
 # Install Overmind, Supercronic, Caddy, Cloudflared and setup Procfile
 RUN set -ex; \
