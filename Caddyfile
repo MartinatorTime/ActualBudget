@@ -9,7 +9,7 @@
 
 # {$DOMAIN}
 
-localhost {
+localhost:80 {
 	log {
 		level INFO
 		output file {$LOG_FILE} {
