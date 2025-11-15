@@ -75,7 +75,7 @@ COPY scripts/*.sh ./
 COPY Caddyfile /etc/caddy/Caddyfile
 
 # Chmod the scripts
-RUN chmod +x /*.sh
+RUN chmod +x ./*.sh
 
 EXPOSE 8080
 
