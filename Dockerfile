@@ -1,7 +1,7 @@
 FROM actualbudget/actual-server:latest
 
 ARG INSTALL_SUPERCRONIC=true
-ARG INSTALL_CADDY=true
+ARG INSTALL_CADDY=false
 ARG SYNC_DATA_CLOUDFLARE_R2=false
 ARG KEEP_ALIVE=false
 ARG INSTALL_CLOUDFLARED=true
@@ -20,7 +20,7 @@ ENV PORT=8080 \
     KEEP_ALIVE=${KEEP_ALIVE}
     #TINI_SUBREAPER=true
 
-VOLUME /data
+#VOLUME /data
 USER root
 # Install runtime dependencies
 RUN apt-get update && \
@@ -80,7 +80,7 @@ RUN chmod +x ./*.sh
 EXPOSE 8080
 
 # Set the entrypoint script as the entrypoint for the container
-ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
 
 # Start Overmind
 CMD ["overmind", "start"]
