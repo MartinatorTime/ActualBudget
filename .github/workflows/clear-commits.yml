@@ -1,9 +1,9 @@
-name: Delete all commits and workflow runs
+name: Clear all commits and workflow runs
 
 on:
   workflow_dispatch:
-   
-jobs:          
+
+jobs:
   del_runs:
     runs-on: ubuntu-latest
     permissions:
@@ -27,11 +27,12 @@ jobs:
           ref: main
       - name: Set Git User
         run: |
-          git config --global user.email "you@example.com"
-          git config --global user.name "Your Name"
-      - name: Clear Repo
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Clear Main Repo
         run: |
-          git checkout --orphan new-main
+          git checkout --orphan temp_main
           git add -A
           git commit -am "Initial commit"
           git branch -D main
