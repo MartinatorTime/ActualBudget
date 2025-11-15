@@ -8,18 +8,16 @@
 # }
 
 # {$DOMAIN}
-
-localhost {
-	log {
-		level INFO
-		output file {$LOG_FILE} {
-			roll_size 10MB
-			roll_keep 10
-		}
-	}
-
+localhost:80 {
+	#log {
+	#	level ERROR
+	#	output file {$LOG_FILE} {
+	#		roll_size 10MB
+	#		roll_keep 10
+	#	}
+	#}
 	# Uncomment this if you want to get a cert via ACME (Let's Encrypt or ZeroSSL).
-	#tls testemail@duck.com
+	# tls {$EMAIL}
 
 	# Or uncomment this if you're providing your own cert. You would also use this option
 	# if you're running behind Cloudflare.
@@ -33,21 +31,21 @@ localhost {
 	# Uncomment to improve security (WARNING: only use if you understand the implications!)
 	# If you want to use FIDO2 WebAuthn, set X-Frame-Options to "SAMEORIGIN" or the Browser will block those requests
 	header / {
-		#	# Enable HTTP Strict Transport Security (HSTS)
+		#       # Enable HTTP Strict Transport Security (HSTS)
 		Strict-Transport-Security "max-age=31536000;"
-		#	# Disable cross-site filter (XSS)
+		#       # Disable cross-site filter (XSS)
 		X-XSS-Protection "0"
-		#	# Disallow the site to be rendered within a frame (clickjacking protection)
+		#       # Disallow the site to be rendered within a frame (clickjacking protection)
 		X-Frame-Options "SAMEORIGIN"
-		#	# Prevent search engines from indexing (optional)
+		#       # Prevent search engines from indexing (optional)
 		X-Robots-Tag "noindex, nofollow"
-		#	# Disallow sniffing of X-Content-Type-Options
+		#       # Disallow sniffing of X-Content-Type-Options
 		X-Content-Type-Options "nosniff"
-		#	# Server name removing
+		#       # Server name removing
 		-Server
-		#	# Remove X-Powered-By though this shouldn't be an issue, better opsec to remove
+		#       # Remove X-Powered-By though this shouldn't be an issue, better opsec to remove
 		-X-Powered-By
-		#	# Remove Last-Modified because etag is the same and is as effective
+		#       # Remove Last-Modified because etag is the same and is as effective
 		-Last-Modified
 	}
 
@@ -58,11 +56,10 @@ localhost {
 	# if located at a sub-path the reverse_proxy line will look like:
 	#   reverse_proxy /subpath/* <SERVER>:80
 	reverse_proxy localhost:8080 {
-		# Send the true remote IP to Rocket, so that Vaultwarden can put this in the
-		# log, so that fail2ban can ban the correct IP.
+		# Trust Cloudflared proxy and set correct headers
+		trusted_proxies 127.0.0.1/32
 		header_up X-Real-IP {http.request.header.Cf-Connecting-Ip}
-		# If you use Cloudflare proxying, replace remote_host with http.request.header.Cf-Connecting-Ip
-		# See https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/
-		# and https://caddy.community/t/forward-auth-copy-headers-value-not-replaced/16998/4
+		header_up X-Forwarded-For {http.request.header.Cf-Connecting-Ip}
+		header_up Host {host}
 	}
 }

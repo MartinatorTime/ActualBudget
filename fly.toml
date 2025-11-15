@@ -1,8 +1,0 @@
-primary_region = "arn"
-
-[build]
-  dockerfile = "Dockerfile"
-
-[[mounts]]
-  source = "actual_data"
-  destination = "/data"
