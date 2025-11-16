@@ -1,7 +1,6 @@
 FROM actualbudget/actual-server:latest
 
 ARG INSTALL_CLOUDFLARED=true
-ARG INSTALL_CADDY=true
 ARG SYNC_DATA_CLOUDFLARE_R2=false
 ARG BACKUP_RCLONE_R2=false
 ARG KEEP_ALIVE=false
@@ -32,7 +31,6 @@ RUN echo "actualbudget: node app.js" > ./Procfile
 RUN set -ex; \
     OVERMIND_VERSION=$(curl -s https://api.github.com/repos/DarthSim/overmind/releases/latest | jq -r '.tag_name'); \
     SUPERCRONIC_VERSION=$(curl -s https://api.github.com/repos/aptible/supercronic/releases/latest | jq -r '.tag_name'); \
-    CADDY_VERSION=$(curl -s https://api.github.com/repos/caddyserver/caddy/releases/latest | jq -r '.tag_name'); \
     CLOUDFLARED_VERSION=$(curl -s https://api.github.com/repos/cloudflare/cloudflared/releases/latest | jq -r '.tag_name'); \
     \
     curl -L -o overmind.gz "https://github.com/DarthSim/overmind/releases/download/$OVERMIND_VERSION/overmind-${OVERMIND_VERSION}-linux-amd64.gz" || exit 1; \
@@ -51,11 +49,8 @@ RUN set -ex; \
         echo "cf_tunnel: ./start_cloudflared.sh" >> ./Procfile; \
     fi; \
     \
-    if [ "$INSTALL_CADDY" = "true" ]; then \
-        wget -O caddy.tar.gz "https://github.com/caddyserver/caddy/releases/download/$CADDY_VERSION/caddy_${CADDY_VERSION#v}_linux_amd64.tar.gz" || exit 1; \
-        tar -xzf caddy.tar.gz -C /usr/local/bin/ caddy; \
-        echo "caddy: caddy run --config /etc/caddy/Caddyfile --adapter caddyfile" >> ./Procfile; \
-    fi; \
+    apt-get install -y nginx; \
+    echo "nginx: nginx -g 'daemon off;'" >> ./Procfile; \
     \
     if [ "$SYNC_DATA_CLOUDFLARE_R2" = "true" ]; then \
         echo "data-sync: ./sync-r2-rclone.sh" >> ./Procfile; \
@@ -67,7 +62,7 @@ RUN set -ex; \
 
 # Copy the entrypoint script and other scripts
 COPY scripts/*.sh ./
-COPY Caddyfile /etc/caddy/Caddyfile
+COPY nginx.conf /etc/nginx/sites-available/default
 
 # Chmod the scripts
 RUN chmod +x ./*.sh
