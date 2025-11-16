@@ -22,7 +22,7 @@ ENV PORT=8080 \
 USER root
 # Install runtime dependencies
 RUN apt-get update && \
-    apt-get install -y sqlite3 libpq5 wget curl tar lsof jq gpg ca-certificates openssl tmux procps unzip && \
+    apt-get install -y sqlite3 libpq5 wget curl tar lsof jq gpg ca-certificates openssl tmux procps unzip nginx && \
     rm -rf /var/lib/apt/lists/*
 
 # Create Procfile for overmind
@@ -51,7 +51,6 @@ RUN set -ex; \
     fi; \
     \
     if [ "$INSTALL_NGINX" = "true" ]; then \
-        apt-get install -y nginx; \
         echo "nginx: nginx -g 'daemon off;'" >> ./Procfile; \
     fi; \
     \
