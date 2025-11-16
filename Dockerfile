@@ -1,6 +1,7 @@
 FROM actualbudget/actual-server:latest
 
 ARG INSTALL_CLOUDFLARED=true
+ARG INSTALL_NGINX=true
 ARG SYNC_DATA_CLOUDFLARE_R2=false
 ARG BACKUP_RCLONE_R2=false
 ARG KEEP_ALIVE=false
@@ -49,6 +50,7 @@ RUN set -ex; \
         echo "cf_tunnel: ./start_cloudflared.sh" >> ./Procfile; \
     fi; \
     \
+    if [ "$INSTALL_NGINX" = "true" ]; then \
     apt-get install -y nginx; \
     echo "nginx: nginx -g 'daemon off;'" >> ./Procfile; \
     \
