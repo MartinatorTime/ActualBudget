@@ -2,7 +2,7 @@
 if [[ "$IS_PRIVILEGED" == "true" ]]; then
     sysctl -w net.core.rmem_max=8388608
     sysctl -w net.core.wmem_max=8388608
-    cloudflared tunnel --autoupdate-freq "24h" --protocol "quic" --loglevel "info" run --token "$CF_TOKEN" --url http://localhost:80 --origin-server-name localhost --no-tls-verify
+    cloudflared tunnel --autoupdate-freq "24h" --protocol "quic" --loglevel "info" run --token "$CF_TOKEN" --url http://localhost:80
 else
-    cloudflared tunnel --autoupdate-freq "24h" --protocol "http2" --loglevel "info" run --token "$CF_TOKEN" --url http://localhost:80 --origin-server-name localhost --no-tls-verify
+    cloudflared tunnel --autoupdate-freq "24h" --protocol "http2" --loglevel "info" run --token "$CF_TOKEN" --url http://localhost:80
 fi
