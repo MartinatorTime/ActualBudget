@@ -57,5 +57,5 @@ localhost:80 {
 	# Proxy everything to Rocket
 	# if located at a sub-path the reverse_proxy line will look like:
 	#   reverse_proxy /subpath/* <SERVER>:80
-	reverse_proxy localhost:8080
+	reverse_proxy 127.0.0.1:5006
 }
