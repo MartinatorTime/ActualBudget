@@ -51,8 +51,9 @@ RUN set -ex; \
     fi; \
     \
     if [ "$INSTALL_NGINX" = "true" ]; then \
-    apt-get install -y nginx; \
-    echo "nginx: nginx -g 'daemon off;'" >> ./Procfile; \
+        apt-get install -y nginx; \
+        echo "nginx: nginx -g 'daemon off;'" >> ./Procfile; \
+    fi; \
     \
     if [ "$SYNC_DATA_CLOUDFLARE_R2" = "true" ]; then \
         echo "data-sync: ./sync-r2-rclone.sh" >> ./Procfile; \
