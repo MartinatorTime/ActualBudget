@@ -1,29 +1,7 @@
-localhost:80 {
-	log {
-		level INFO
-		output file {$LOG_FILE} {
-			roll_size 10MB
-			roll_keep 10
+budget.martinatortime.us.to {
+	reverse_proxy https://localhost:8080 {
+		transport http {
+			tls_insecure_skip_verify
 		}
 	}
-
-	# Uncomment this if you want to get a cert via ACME (Let's Encrypt or ZeroSSL).
-	#tls testemail@duck.com
-
-	# Or uncomment this if you're providing your own cert. You would also use this option
-	# if you're running behind Cloudflare.
-	# tls {$SSL_CERT_PATH} {$SSL_KEY_PATH}
-
-	# This setting may have compatibility issues with some browsers
-	# (e.g., attachment downloading on Firefox). Try disabling this
-	# if you encounter issues.
-	encode gzip zstd
-
-	# Uncomment to allow access to the admin interface only from local networks
-	# import admin_redir
-
-	# Proxy everything to Rocket
-	# if located at a sub-path the reverse_proxy line will look like:
-	#   reverse_proxy /subpath/* <SERVER>:80
-	reverse_proxy 127.0.0.1:5006
 }
