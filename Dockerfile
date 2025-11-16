@@ -1,7 +1,7 @@
 FROM actualbudget/actual-server:latest
 
 ARG INSTALL_CLOUDFLARED=true
-ARG INSTALL_CADDY=true
+ARG INSTALL_CADDY=false
 ARG SYNC_DATA_CLOUDFLARE_R2=false
 ARG BACKUP_RCLONE_R2=false
 ARG KEEP_ALIVE=false
