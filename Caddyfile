@@ -1,5 +1,5 @@
 localhost:80 {
-	reverse_proxy https://localhost:8080 {
+	reverse_proxy http://localhost:8080 {
 		transport http {
 			tls_insecure_skip_verify
 		}
