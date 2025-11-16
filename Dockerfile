@@ -1,13 +1,12 @@
 FROM actualbudget/actual-server:latest
 
 ARG INSTALL_CLOUDFLARED=true
-ARG INSTALL_NGINX=true
+ARG INSTALL_NGINX=false
 ARG SYNC_DATA_CLOUDFLARE_R2=false
 ARG BACKUP_RCLONE_R2=false
 ARG KEEP_ALIVE=false
 
 ENV PORT=8080 \
-    ACTUAL_HOSTNAME=localhost \
     LOG_FILE=/data/actual.log \
     R2_DATA_SYNC_LOG=false \
     SYNC_DATA_CLOUDFLARE_R2=${SYNC_DATA_CLOUDFLARE_R2} \
